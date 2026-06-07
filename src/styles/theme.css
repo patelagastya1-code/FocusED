@@ -1,0 +1,29 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "DM Sans", sans-serif;
+  --font-display: "Bricolage Grotesque", sans-serif;
+
+  --color-primary: #00373E;
+  --color-primary-foreground: #FFFFFF;
+  
+  --color-accent-peach: #F9E6D0;
+  --color-accent-sand: #FDF7F1;
+  --color-accent-mint: rgba(0, 55, 62, 0.13);
+  --color-accent-yellow: #E9DA74;
+}
+
+@layer base {
+  :root {
+    --background: 250 20% 98%; /* #FAFAFA approx */
+    --foreground: 187 100% 12%; /* #00373E */
+  }
+  
+  body {
+    @apply font-sans bg-[hsl(var(--background))] text-primary antialiased;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display tracking-tight text-primary;
+  }
+}
