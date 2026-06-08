@@ -17,6 +17,7 @@ function figmaAssetResolver() {
 }
 
 export default defineConfig({
+  envDir: __dirname,
   base: '/FocusED/',
   plugins: [
     figmaAssetResolver(),

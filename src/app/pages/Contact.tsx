@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { supabase } from "../../lib/supabase";
 
 export function Contact() {
   const [responses, setResponses] = useState({
@@ -10,7 +11,10 @@ export function Contact() {
     q6: null,
     q7: "",
     q8: "",
+    email: "",
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitMessage, setSubmitMessage] = useState("");
 
   const handleStarChange = (field: string, value: number) => {
     setResponses({ ...responses, [field]: value });
@@ -24,10 +28,71 @@ export function Contact() {
     setResponses({ ...responses, [field]: value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Survey responses:", responses);
-    alert("Thank you for your feedback!");
+
+    const requiredFields = [responses.q1, responses.q2, responses.q3, responses.q4, responses.q5, responses.q6];
+    if (requiredFields.some((value) => value === null || value === "")) {
+      setSubmitMessage("Please answer questions 1 to 6 before submitting.");
+      return;
+    }
+
+    if (responses.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(responses.email)) {
+      setSubmitMessage("Please enter a valid email address.");
+      return;
+    }
+
+    try {
+      setIsSubmitting(true);
+      setSubmitMessage("");
+
+      if (!supabase) {
+        throw new Error("Supabase client not initialized");
+      }
+
+      const { error } = await supabase.from("feedback").insert({
+        q1: responses.q1,
+        q2: responses.q2,
+        q3: responses.q3,
+        q4: responses.q4,
+        q5: responses.q5,
+        q6: responses.q6,
+        q7: responses.q7 || null,
+        q8: responses.q8 || null,
+        email: responses.email || null,
+        page_url: window.location.href,
+        user_agent: navigator.userAgent,
+      });
+
+      if (error) {
+        throw error;
+      }
+
+      setSubmitMessage("Thank you for your feedback!");
+      setResponses({
+        q1: null,
+        q2: null,
+        q3: null,
+        q4: null,
+        q5: null,
+        q6: null,
+        q7: "",
+        q8: "",
+        email: "",
+      });
+    } catch (error: unknown) {
+      const errorMessage =
+        typeof error === "object" &&
+        error !== null &&
+        "message" in error &&
+        typeof error.message === "string"
+          ? error.message
+          : "Could not submit. Check .env loading, feedback table, and RLS insert policy.";
+
+      setSubmitMessage(errorMessage);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -191,7 +256,7 @@ export function Contact() {
           </div>
 
           {/* Q8: Suggestions */}
-          <div className="pb-12">
+          <div className="border-b border-slate-200 pb-12">
             <h3 className="font-display font-semibold text-2xl text-primary mb-2">Q8 — Suggestions</h3>
             <p className="font-sans text-lg text-primary mb-4 opacity-70">(optional)</p>
             <p className="font-sans text-lg text-primary mb-6">Is there anything we should change or add?</p>
@@ -204,12 +269,33 @@ export function Contact() {
             />
           </div>
 
+          {/* Hear Back */}
+          <div className="pb-12">
+            <h3 className="font-display font-semibold text-2xl text-primary mb-2">Want to hear back?</h3>
+            <p className="font-sans text-lg text-primary mb-4 opacity-70">(optional)</p>
+            <p className="font-sans text-lg text-primary mb-6">If you want a response from us, share your email below.</p>
+            <input
+              type="email"
+              value={responses.email}
+              onChange={(e) => handleTextChange("email", e.target.value)}
+              placeholder="your@email.com"
+              className="w-full px-6 py-4 border border-slate-300 rounded-[20px] font-sans text-lg text-primary placeholder:text-primary/30 outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all"
+            />
+          </div>
+
           <button
             type="submit"
-            className="w-full bg-primary text-white font-display font-semibold text-xl px-10 py-4 rounded-full hover:bg-opacity-90 transition-all"
+            disabled={isSubmitting}
+            className="w-full bg-primary text-white font-display font-semibold text-xl px-10 py-4 rounded-full hover:bg-opacity-90 transition-all disabled:opacity-60 disabled:cursor-not-allowed"
           >
-            Submit Feedback
+            {isSubmitting ? "Sending..." : "Submit Feedback"}
           </button>
+
+          {submitMessage && (
+            <p className="text-center font-sans text-lg text-primary">
+              {submitMessage}
+            </p>
+          )}
         </form>
       </div>
     </div>

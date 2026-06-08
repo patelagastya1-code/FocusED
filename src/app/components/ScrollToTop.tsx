@@ -4,7 +4,7 @@ export function ScrollToTop() {
   const [isVisible, setIsVisible] = useState(false);
 
   const toggleVisibility = () => {
-    if (window.scrollY > 400) {
+    if (window.scrollY > 10) {
       setIsVisible(true);
     } else {
       setIsVisible(false);
@@ -25,14 +25,12 @@ export function ScrollToTop() {
     };
   }, []);
 
-  if (!isVisible) {
-    return null;
-  }
-
   return (
     <button
       onClick={scrollToTop}
-      className="fixed bottom-8 right-8 bg-primary text-white rounded-full p-4 shadow-lg hover:bg-opacity-90 transition-all duration-300 ease-in-out z-40 flex items-center justify-center"
+      className={`fixed bottom-8 right-8 bg-primary text-white rounded-full p-4 shadow-lg hover:bg-opacity-90 transition-all duration-300 ease-in-out z-40 flex items-center justify-center ${
+        isVisible ? "opacity-100 pointer-events-auto translate-y-0" : "opacity-0 pointer-events-none translate-y-4"
+      }`}
       aria-label="Scroll to top"
     >
       <svg

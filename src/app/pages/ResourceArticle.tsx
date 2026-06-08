@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { useParams, Link } from "react-router";
+import imgIllustration10 from "../../imports/Home/ec7ec719c624ae29f50a46fe884bb915d0f47d75.png";
 import {
   ScreenTimeBarChart,
   StudySessionTimeline,
@@ -196,10 +197,34 @@ const articlesData: Record<string, { title: string; subtitle: string; date: stri
 };
 
 const allArticlesList = [
-  { id: "hours-you-dont-see", title: "The Hours You Don't See" },
-  { id: "more-than-distraction", title: "More Than Distraction" },
-  { id: "tiktok-over-textbooks", title: "Why Your Brain Chooses TikTok Over Textbooks" },
-  { id: "how-to-actually-study", title: "How to Actually Study" },
+  {
+    id: "hours-you-dont-see",
+    title: "The Hours You Don't See",
+    desc: "How your screen time is quietly costing you grades — and what the research actually says.",
+    bg: "bg-[#F9E6D0]",
+    filter: "filter-none",
+  },
+  {
+    id: "more-than-distraction",
+    title: "More Than Distraction",
+    desc: "What heavy phone use is doing to your mental health — and why it matters beyond your grades.",
+    bg: "bg-white",
+    filter: "hue-rotate-[160deg]",
+  },
+  {
+    id: "tiktok-over-textbooks",
+    title: "Why Your Brain Chooses TikTok Over Textbooks",
+    desc: "It's not laziness. It's neuroscience — and the apps on your phone know it better than you do.",
+    bg: "bg-[rgba(0,55,62,0.13)]",
+    filter: "hue-rotate-[-45deg]",
+  },
+  {
+    id: "how-to-actually-study",
+    title: "How to Actually Study",
+    desc: "Practical, research-backed strategies for building real focus — plus the FocusED app.",
+    bg: "bg-[#FDF7F1]",
+    filter: "hue-rotate-[45deg]",
+  },
 ];
 
 export function ResourceArticle() {
@@ -236,15 +261,25 @@ export function ResourceArticle() {
             <h3 className="font-display font-semibold text-2xl text-primary mb-6 border-b border-gray-100 pb-4">
               More Resources
             </h3>
-            <div className="flex flex-col gap-6">
+            <div className="flex flex-col gap-4">
               {otherArticles.map((other) => (
-                <Link key={other.id} to={`/resources/${other.id}`} className="group flex flex-col gap-2">
-                  <span className="font-display font-medium text-xl text-primary group-hover:underline">
+                <Link
+                  key={other.id}
+                  to={`/resources/${other.id}`}
+                  className={`${other.bg} rounded-[30px] p-5 border border-gray-100 shadow-sm relative overflow-hidden group min-h-[210px] flex flex-col transition-transform duration-300 hover:-translate-y-0.5`}
+                >
+                  <h4 className="font-display font-semibold text-[24px] leading-tight text-primary max-w-[210px] relative z-10 mb-3">
                     {other.title}
+                  </h4>
+                  <p className="font-sans text-sm text-primary/90 max-w-[210px] relative z-10 line-clamp-3 mb-auto">
+                    {other.desc}
+                  </p>
+                  <span className="border border-primary text-primary font-display font-semibold text-sm px-4 py-2 rounded-full w-fit hover:bg-primary hover:text-white transition-all relative z-10 mt-4">
+                    Read Article
                   </span>
-                  <span className="font-sans text-primary/60 text-sm flex items-center gap-1 group-hover:text-primary transition-colors">
-                    Read now →
-                  </span>
+                  <div className="absolute right-[-18px] bottom-[-26px] w-[120px] h-[170px] transform group-hover:scale-105 transition-transform duration-300">
+                    <img src={imgIllustration10} alt="" className={`w-full h-full object-contain rotate-180 -scale-y-100 ${other.filter}`} />
+                  </div>
                 </Link>
               ))}
             </div>
