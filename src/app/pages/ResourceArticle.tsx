@@ -285,10 +285,10 @@ export function ResourceArticle() {
             </div>
 
             <div className="mt-12 bg-[#F9E6D0] rounded-[24px] p-6 text-center flex flex-col items-center">
-              <h4 className="font-display font-bold text-xl text-primary mb-2">Need direct support?</h4>
-              <p className="font-sans text-sm text-primary mb-4">Speak with a professional about managing screen time.</p>
+              <h4 className="font-display font-bold text-xl text-primary mb-2">Have feedback for us?</h4>
+              <p className="font-sans text-sm text-primary mb-4">Tell us what helped, what did not, and what you want to see next.</p>
               <Link to="/contact" className="bg-primary text-white font-display text-sm font-semibold py-2 px-6 rounded-full hover:opacity-90 transition-opacity">
-                Contact Us
+                Share Feedback
               </Link>
             </div>
           </div>
